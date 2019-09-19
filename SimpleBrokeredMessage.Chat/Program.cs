@@ -103,9 +103,10 @@ namespace SimpleBrokeredMessage.Chat
         /// <param name="msg"></param>
         private static void ProcessMessage(BrokeredMessage msg)
         {
+            var user = msg.Label;
             var text = msg.GetBody<string>();
 
-            Console.WriteLine($"Message text: {text}");
+            Console.WriteLine($"{user}> : {text}");
         }
 
         /// <summary>
@@ -140,8 +141,10 @@ namespace SimpleBrokeredMessage.Chat
 
             topicClient.Send(message);
 
-            // release all references
+            // Close the factory and all the clients it created
             factory.Close();
+
+            // Close and release the topic client
             topicClient.Close();
 
             //topicClient.MessagingFactory.Close();
