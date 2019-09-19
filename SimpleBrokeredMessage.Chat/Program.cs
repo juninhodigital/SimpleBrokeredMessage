@@ -24,7 +24,7 @@ namespace SimpleBrokeredMessage.Chat
 
             CreateTopic();
             CreateSubscription();
-            Subscribe();
+            SubscribeToTopic();
         }
 
         #endregion
@@ -71,7 +71,11 @@ namespace SimpleBrokeredMessage.Chat
             if (!manager.SubscriptionExists(Topic, Username))
             {
                 // Create a subscription for the user
-                var description = new SubscriptionDescription(Topic, Username) { AutoDeleteOnIdle = TimeSpan.FromMinutes(5) };
+                var description = new SubscriptionDescription(Topic, Username)
+                {
+                    // Automatically delete the subscription after 5 minutes if nobody is using this
+                    AutoDeleteOnIdle = TimeSpan.FromMinutes(5)
+                };
 
                 manager.CreateSubscription(description);
 
@@ -81,7 +85,7 @@ namespace SimpleBrokeredMessage.Chat
         /// <summary>
         /// Subscribe to the topic
         /// </summary>
-        private static void Subscribe()
+        private static void SubscribeToTopic()
         {
             // Create clients
             var factory            = MessagingFactory.CreateFromConnectionString(Connection);
@@ -110,6 +114,7 @@ namespace SimpleBrokeredMessage.Chat
         /// <param name="topicClient"></param>
         private static void SendMessage(TopicClient topicClient)
         {
+            // Send a message saying the user has just entered the chat application
             var message = new BrokeredMessage($" {Username} has entered the room...") { Label = Username };
 
             topicClient.Send(message);
