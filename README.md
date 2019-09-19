@@ -7,7 +7,7 @@ Technologies
 
 ### Instructions
 - [X] **Create a service bus and a queue called 'demoqueue' so as to start using this sample**
-- [X] **Change the endpoints in the c# code**
+- [X] **Change the endpoints in the C# code**
 
 ## Download
 
