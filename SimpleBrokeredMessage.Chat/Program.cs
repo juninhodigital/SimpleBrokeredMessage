@@ -94,7 +94,7 @@ namespace SimpleBrokeredMessage.Chat
 
             subscriptionClient.OnMessage(msg => ProcessMessage(msg));
 
-            SendMessage(topicClient);
+            SendMessage(factory, topicClient);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace SimpleBrokeredMessage.Chat
         /// Send message to the topic
         /// </summary>
         /// <param name="topicClient"></param>
-        private static void SendMessage(TopicClient topicClient)
+        private static void SendMessage(MessagingFactory factory, TopicClient topicClient)
         {
             // Send a message saying the user has just entered the chat application
             var message = new BrokeredMessage($" {Username} has entered the room...") { Label = Username };
@@ -134,6 +134,17 @@ namespace SimpleBrokeredMessage.Chat
                     topicClient.Send(message);
                 }
             }
+
+            // Send a message saying the user has just entered the chat application
+            message = new BrokeredMessage($" {Username} has left the room...") { Label = Username };
+
+            topicClient.Send(message);
+
+            // release all references
+            factory.Close();
+            topicClient.Close();
+
+            //topicClient.MessagingFactory.Close();
         }
 
         #endregion
